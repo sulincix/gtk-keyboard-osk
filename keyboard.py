@@ -6,7 +6,7 @@ import os
 import sys
 
 # If set True log all events (Too dangerous for privacy)
-debug=False
+debug=True
 
 
 # Remove user theme
@@ -180,6 +180,7 @@ class key:
             print("Press:"+str(self.key))
 
     def release(self, widget):
+        global alt_enabled
         if not self.lock:
             self.active = False
             self.button.set_name("key_disabled")
