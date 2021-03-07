@@ -1,11 +1,25 @@
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from pynput.keyboard import Key, Controller
 import os
 import sys
+
+# If set True log all events (Too dangerous for privacy)
+debug=False
+
+
 # Remove user theme
-os.environ["GTK_THEME"] = "Adwaita-dark"
+#os.environ["GTK_THEME"] = "Adwaita"
 # define css
 css = """
+box {
+border-width: 0px;
+}
+button {
+    font-size: 23px;
+    font-family: monospace;
+}
 button:hover {
     background: #004c8c;
     color: #FFF;
@@ -19,14 +33,6 @@ button:hover {
     background: #008e00;
 }
 
-#key_enabled {
-    
-}
-.text-button *{
-    font-size: 150%;
-    border-width: 0;
-    font-family: monospace;
-}
 """
 
 # Css provider
@@ -67,20 +73,23 @@ big = False
 kbd = []
 if len(sys.argv) < 2:
     kbd=trf
-elif sys.argv[1] == "trq":
+elif  "trq" in sys.argv:
     kbd = trq
-elif sys.argv[1] == "trf":
+elif "trf" in sys.argv:
     kbd = trf
 
 # alt key fixes (xfce lxde cinnamon)
 alt_enabled = False
 alt_lock = False
-alt = Gtk.Button("alt")
+alt = Gtk.Button(label="alt")
 
 
 def alt_toggle(widget):
     global alt_enabled
     global alt_lock
+    if debug:
+        print("Alt-enable:"+str(alt_enabled))
+        print("Alt-lock:"+str(alt_lock))
     if not alt_enabled:
         alt_enabled = True
     elif not alt_lock:
@@ -99,6 +108,24 @@ def alt_toggle(widget):
 alt.connect("clicked", alt_toggle)
 
 
+# mode & mode_show buttons
+mode=Gtk.Button(label="⚙")
+mode_show=Gtk.Button(label="⚙")
+def mode_click(widget):
+    layout2.hide()
+    mode_show.show()
+    w.set_size_request(0,0)
+    if debug:
+        print("UI minimized")
+def mode_show_click(widget):
+    layout2.show()
+    mode_show.hide()
+    if debug:
+        print("UI maximized")
+    w.set_size_request(0,0)
+mode.connect("clicked",mode_click)
+mode_show.connect("clicked",mode_show_click)
+
 class key:
     def __init__(self, n, m=None, toggle=False, flat=True):
         if not m:
@@ -106,7 +133,7 @@ class key:
         self.key = n
         self.label = m
         self.flat = flat
-        self.button = Gtk.Button(m)
+        self.button = Gtk.Button(label=m)
         self.active = False
         self.lock = False
         if not toggle:
@@ -129,21 +156,25 @@ class key:
             keyboard.press(Key.alt)
         if self.key:
             keyboard.press(self.key)
+        if debug:
+            print("Press:"+str(self.key))
 
+    def release(self, widget):
+        if not self.lock:
+            self.active = False
+            self.button.set_name("key_disabled")
+            if self.key:
+                keyboard.release(self.key)
+        if debug:
+            print("Release:"+str(self.key))
         if self not in single_keys:
             for key in single_keys:
-                if not key.lock:
-                    key.release(None)
+                if not key.lock and key.active:
+                    key.release(self.key)
             if not alt_lock:
                 alt_enabled = False
                 alt.set_name("key_disabled")
             keyboard.release(Key.alt)
-
-    def release(self, widget):
-        self.active = False
-        self.button.set_name("key_disabled")
-        if self.key:
-            keyboard.release(self.key)
 
     def toggle(self, widget):
         if not self.active:
@@ -157,7 +188,9 @@ class key:
             self.press(widget)
         else:
             self.release(widget)
-
+        if debug:
+            print("Toggle-active:"+str(self.active)+":"+str(self.key))
+            print("Toggle-lock:"+str(self.lock)+":"+str(self.key))
 
 def capslock_toggle(widget):
     global big
@@ -173,12 +206,6 @@ for j in kbd:
     l.append(ll)
     layout.pack_start(ll, 1, True, True)
 
-for j in kbd:
-    ll = Gtk.Box()
-    ll.set_homogeneous(True)
-    l2.append(ll)
-    layout2.pack_start(ll, 1, True, True)
-
 
 hb.add(key(Key.esc, "esc").button)
 hl = Gtk.Box()
@@ -187,23 +214,24 @@ hl.add(key(Key.f1, "f1").button)
 hl.add(key(Key.f2, "f2").button)
 hl.add(key(Key.f3, "f3").button)
 hl.add(key(Key.f4, "f4").button)
-hl.add(Gtk.Label("      "))
+hl.add(Gtk.Label(label="      "))
 hl.add(key(Key.f5, "f5").button)
 hl.add(key(Key.f6, "f6").button)
 hl.add(key(Key.f7, "f7").button)
 hl.add(key(Key.f8, "f8").button)
-hl.add(Gtk.Label("      "))
+hl.add(Gtk.Label(label="      "))
 hl.add(key(Key.f9, "f9").button)
 hl.add(key(Key.f10, "f10").button)
 hl.add(key(Key.f11, "f11").button)
 hl.add(key(Key.f12, "f12").button)
-exit = Gtk.Button("✖")
+exit = Gtk.Button(label="✖")
 exit.connect("clicked", Gtk.main_quit)
 hb.pack_end(exit)
+hb.pack_end(mode_show)
 
 
 l[1].pack_start(key(Key.tab, "Tab").button, 0, False, False)
-capslock = Gtk.Button("Caps")
+capslock = Gtk.Button(label="Caps")
 capslock.connect("clicked", capslock_toggle)
 capslock.set_name("key_disabled")
 l[2].pack_start(capslock, 0, False, False)
@@ -219,25 +247,38 @@ l[4].pack_start(key(Key.ctrl, "ctrl", True).button, 0, False, False)
 for j in kbd:
     for i in j:
         l[kbd.index(j)].pack_start(
-            key(i, flat=i.isalpha()).button, 1, True, True)
+            key(i," {} ".format(i),flat=i.isalpha()).button, 1, True, True)
 
-l[0].pack_start(key(Key.backspace, " ⟸ ").button, 0, False, False)
-l[1].pack_start(key(Key.delete, " ⌫ ").button, 0, False, False)
+l[0].pack_start(key(Key.backspace, "     ⟸     ").button, 0, False, False)
+l[1].pack_start(key(Key.delete, "delete").button, 0, False, False)
 l[2].pack_start(key(Key.enter, "  ⏎  ").button, 0, False, False)
-l[3].pack_start(key(Key.shift, "  ⇧  ", True).button, 0, False, False)
+l[3].pack_start(key(Key.shift, "   ⇧   ", True).button, 0, False, False)
+
+for j in[0,1,2,3,4]:
+    ll = Gtk.Box()
+    ll.set_homogeneous(True)
+    l2.append(ll)
+    layout2.pack_start(ll, 1, True, True)
 
 
-l2[0].pack_start(key(Key.home, "home").button, 1, True, True)
-l2[0].pack_start(key(Key.end, "end").button, 1, True, True)
+l2[0].pack_start(key(Key.media_volume_down, "🔈").button, 1, True, True)
+l2[0].pack_start(key(Key.media_volume_mute, "🔇").button, 1, True, True)
+l2[0].pack_start(key(Key.media_volume_up, "🔊").button, 1, True, True)
+
 l2[1].pack_start(key(Key.page_up, "pgup").button, 1, True, True)
+l2[1].pack_start(key(Key.up, "↑").button, 1, True, True)
 l2[1].pack_start(key(Key.page_down, "pgdwn").button, 1, True, True)
-l2[2].pack_start(key(Key.insert, "insert").button, 1, True, True)
-l2[2].pack_start(key(Key.print_screen, "sysrq").button, 1, True, True)
-l2[3].pack_start(Gtk.Label(" "), 1, True, True)
-l2[3].pack_start(key(Key.up, "↑").button, 1, True, True)
-l2[3].pack_start(Gtk.Label(" "), 1, True, True)
-l2[4].pack_start(key(Key.left, "←").button, 1, True, True)
-l2[4].pack_start(key(Key.down, "↓").button, 1, True, True)
-l2[4].pack_start(key(Key.right, "→").button, 1, True, True)
+l2[2].pack_start(key(Key.left, "←").button, 1, True, True)
+l2[2].pack_start(key(Key.enter, "⏎").button, 0, True, True)
+l2[2].pack_start(key(Key.right, "→").button, 1, True, True)
+l2[3].pack_start(key(Key.home, "home").button, 1, True, True)
+l2[3].pack_start(key(Key.down, "↓").button, 1, True, True)
+l2[3].pack_start(key(Key.end, "end").button, 1, True, True)
+l2[4].pack_start(key(Key.insert, "insert").button, 1, True, True)
+l2[4].pack_start(mode, 1, True, True)
+l2[4].pack_start(key(Key.print_screen, "sysrq").button, 1, True, True)
+
+
 w.show_all()
+mode_click(None)
 Gtk.main()
