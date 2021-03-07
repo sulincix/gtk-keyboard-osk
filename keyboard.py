@@ -6,7 +6,7 @@ import os
 import sys
 
 # If set True log all events (Too dangerous for privacy)
-debug=True
+debug=False
 
 
 # Remove user theme
@@ -60,6 +60,8 @@ w.set_accept_focus(False)
 w.set_keep_above(True)
 w.set_resizable(False)
 w.set_deletable(False)
+w.set_skip_taskbar_hint(True)
+w.set_skip_pager_hint(True)
 
 
 # define static variables
