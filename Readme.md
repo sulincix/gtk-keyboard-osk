@@ -13,4 +13,4 @@ Default is trf
 
 # Screenshots:
 
-![trf][trf.png]
+![trf](https://gitlab.com/sulincix/gtk-keyboard-osk/-/raw/master/trf.png)
