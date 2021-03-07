@@ -12,12 +12,13 @@ debug=False
 # Remove user theme
 #os.environ["GTK_THEME"] = "Adwaita"
 # define css
+screen = Gdk.Screen.get_default()
 css = """
 box {
 border-width: 0px;
 }
 button {
-    font-size: 23px;
+    font-size: """+str(screen.get_width()/91)+"""px;
     font-family: monospace;
 }
 button:hover {
@@ -36,7 +37,6 @@ button:hover {
 """
 
 # Css provider
-screen = Gdk.Screen.get_default()
 gtk_provider = Gtk.CssProvider()
 gtk_context = Gtk.StyleContext()
 gtk_context.add_provider_for_screen(
