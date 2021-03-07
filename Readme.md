@@ -1,6 +1,15 @@
-# Gtk on screen keyboard
+# Gtk on screen keyboard (gtk-keyboard-osk)
 
-Usege:
+Screen keyboard written gtk3 and pynput
+
+## Advantages:
+
+* Small size
+* Minimal dependencies
+* Installation not needed (portable)
+* Single source file
+
+## Usage:
 
 `python3 ./keyboard.py [trq/trf/trm/trfm/aqvoid/us/ru]`
 
@@ -8,8 +17,15 @@ Default is trf
 
 # Requirements:
 
-* gir1.2-gtk-3.0
-* python3-pynput
+* gir1.2-gtk-3.0 (python3-gobject)
+* python3-pynput (you can install with pip3)
+
+# Installation:
+```
+git clone https://gitlab.com/sulincix/gtk-keyboard-osk.git gtk-keyboard-osk
+cd gtk-keyboard-osk
+install keyboard.py /usr/bin/gtk-keyboard-osk # You can change name
+```
 
 # Screenshots:
 
