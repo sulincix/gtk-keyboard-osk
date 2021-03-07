@@ -18,7 +18,7 @@ box {
 border-width: 0px;
 }
 button {
-    font-size: """+str(screen.get_width()/91)+"""px;
+    font-size: """+str(screen.get_height()/52)+"""px;
     font-family: monospace;
 }
 button:hover {
