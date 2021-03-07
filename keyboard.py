@@ -65,7 +65,9 @@ single_keys = []
 big = False
 
 kbd = []
-if sys.argv[1] == "trq":
+if len(sys.argv) < 2:
+    kbd=trf
+elif sys.argv[1] == "trq":
     kbd = trq
 elif sys.argv[1] == "trf":
     kbd = trf
