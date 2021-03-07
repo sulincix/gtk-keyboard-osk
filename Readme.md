@@ -2,7 +2,7 @@
 
 Usege:
 
-`python3 ./keyboard.py [trq/trf]`
+`python3 ./keyboard.py [trq/trf/trm/trfm/aqvoid/us/ru]`
 
 Default is trf
 
@@ -15,3 +15,5 @@ Default is trf
 
 ![trf](https://gitlab.com/sulincix/gtk-keyboard-osk/-/raw/master/trf.png)
 ![trq](https://gitlab.com/sulincix/gtk-keyboard-osk/-/raw/master/trq.png)
+![us](https://gitlab.com/sulincix/gtk-keyboard-osk/-/raw/master/us.png)
+![ru](https://gitlab.com/sulincix/gtk-keyboard-osk/-/raw/master/ru.png)

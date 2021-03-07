@@ -67,16 +67,36 @@ l = []  # row array
 l2 = []  # row array (left)
 trf = ["+1234567890/-", "fgğıodrnhpqw", "uieaütkmlyşx", "<jövcçzsb.,", ""]
 trq = ["\"1234567890*-", "qwertyuıopğü", "asdfghjklşi,", "<zxcvbnmöç.", ""]
-single_keys = []
+trm = ["\"1234567890*-", "qwertyuiop", "asdfghjkl,", "<zxcvbnm.", ""]
+trfm = ["+1234567890/-", "fgodrnhpqw", "uieatkmlyx", "<jvczsb.,", ""]
+aqvoid = ["+1234567890/-", "aqvoidfınlmk", "ğcsergpyjhşx", "<tbuzçwöü.,", ""]
+
+ru=["ё1234567890-=","йцукенгшщзхъ","фывапролджэ\\","~ячсмитьбю.",""]
+us= ["`1234567890-=","qwertyuiop[]","asdfghjkl;'\\","~zxcvbnm,./",""]
+single_keys = [] 
 big = False
 
-kbd = []
-if len(sys.argv) < 2:
-    kbd=trf
-elif  "trq" in sys.argv:
+if  "trq" in sys.argv:
     kbd = trq
-elif "trf" in sys.argv:
+    os.system("setxkbmap tr")
+elif  "trm" in sys.argv:
+    kbd = trm
+    os.system("setxkbmap tr")
+elif  "trfm" in sys.argv:
+    kbd = trfm
+    os.system("setxkbmap tr f")
+elif  "aqvoid" in sys.argv:
+    kbd = aqvoid
+    os.system("setxkbmap tr f")
+elif "us" in sys.argv:
+    kbd=us
+    os.system("setxkbmap us")
+elif "ru" in sys.argv:
+    kbd=ru
+    os.system("setxkbmap ru")
+else:
     kbd = trf
+    os.system("setxkbmap tr f")
 
 # alt key fixes (xfce lxde cinnamon)
 alt_enabled = False
@@ -201,7 +221,7 @@ def capslock_toggle(widget):
     big = not big
 
 
-for j in kbd:
+for j in [0,1,2,3,4]:
     ll = Gtk.Box()
     l.append(ll)
     layout.pack_start(ll, 1, True, True)
@@ -254,7 +274,7 @@ l[1].pack_start(key(Key.delete, "delete").button, 0, False, False)
 l[2].pack_start(key(Key.enter, "  ⏎  ").button, 0, False, False)
 l[3].pack_start(key(Key.shift, "   ⇧   ", True).button, 0, False, False)
 
-for j in[0,1,2,3,4]:
+for j in [0,1,2,3,4]:
     ll = Gtk.Box()
     ll.set_homogeneous(True)
     l2.append(ll)
