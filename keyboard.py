@@ -5,6 +5,19 @@ from gi.repository import Gtk, Gdk
 from pynput.keyboard import Key, Controller
 import os
 import sys
+import fcntl
+fh=0
+#https://stackoverflow.com/questions/380870/make-sure-only-a-single-instance-of-a-program-is-running
+def run_once():
+    global fh
+    fh=open(os.path.realpath(__file__),'r')
+    try:
+        fcntl.flock(fh,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    except:
+        print("Process already running.")
+        os._exit(0)
+
+run_once()
 
 # If set True log all events (Too dangerous for privacy)
 debug=False
