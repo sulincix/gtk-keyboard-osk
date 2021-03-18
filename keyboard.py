@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
@@ -17,10 +18,14 @@ css = """
 box {
 border-width: 0px;
 }
-button {
-    font-size: """+str(screen.get_height()/52)+"""px;
+button, label, entry {
+    font-size: """+str(screen.get_height()/62)+"""px;
     font-family: monospace;
 }
+button {
+    padding: """+str(screen.get_height()/300)+"""px;
+}
+
 button:hover {
     background: #004c8c;
     color: #FFF;
@@ -97,8 +102,7 @@ elif "ru" in sys.argv:
     kbd=ru
     os.system("setxkbmap ru")
 else:
-    kbd = trf
-    os.system("setxkbmap tr f")
+    kbd = trq
 
 # alt key fixes (xfce lxde cinnamon)
 alt_enabled = False
@@ -131,8 +135,8 @@ alt.connect("clicked", alt_toggle)
 
 
 # mode & mode_show buttons
-mode=Gtk.Button(label="⚙")
-mode_show=Gtk.Button(label="⚙")
+mode=Gtk.Button(label=" ⚙ ")
+mode_show=Gtk.Button(label=" ⚙ ")
 def mode_click(widget):
     layout2.hide()
     mode_show.show()
