@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Icon=osk
+Type=Application
+Exec=osk
+Name=osk
+GenericName=osk

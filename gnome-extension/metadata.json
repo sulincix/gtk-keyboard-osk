@@ -1,0 +1,8 @@
+{
+  "description": "Replace gnome-keyboard with osk", 
+  "name": "osk-replace", 
+  "shell-version": ["3.30","3.32","3.34","3.36","3.38"], 
+  "url": "https://gitlab.com/sulincix/gtk-keyboard-osk",
+  "uuid": "osk-replace@sulincix", 
+  "version": 0.1
+}
