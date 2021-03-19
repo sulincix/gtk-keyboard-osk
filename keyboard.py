@@ -21,22 +21,21 @@ run_once()
 
 # If set True log all events (Too dangerous for privacy)
 debug=False
+theming=True
 
 
-# Remove user theme
-#os.environ["GTK_THEME"] = "Adwaita"
 # define css
 screen = Gdk.Screen.get_default()
 css = """
-box {
-border-width: 0px;
-}
 button, label, entry {
     font-size: """+str(screen.get_height()/62)+"""px;
     font-family: monospace;
 }
 button {
     padding: """+str(screen.get_height()/300)+"""px;
+    margin: """+str(screen.get_height()/355)+"""px;
+    min-height: """+str(screen.get_height()/40)+"""px;
+    min-width: """+str(screen.get_height()/40)+"""px;
 }
 
 button:hover {
@@ -53,6 +52,21 @@ button:hover {
 }
 
 """
+if theming:
+    # Remove user theme
+    os.environ["GTK_THEME"] = "Adwaita-dark"
+    css+="""
+    * {
+        color: #fff;
+        border-width: 0px;
+    }
+    box, headerbar, window {
+        background: #000;
+    }
+    button {
+        background: #333;
+    }
+    """
 
 # Css provider
 gtk_provider = Gtk.CssProvider()
@@ -301,9 +315,9 @@ for j in [0,1,2,3,4]:
     layout2.pack_start(ll, 1, True, True)
 
 
-l2[0].pack_start(key(Key.media_volume_down, "🔈").button, 1, True, True)
-l2[0].pack_start(key(Key.media_volume_mute, "🔇").button, 1, True, True)
-l2[0].pack_start(key(Key.media_volume_up, "🔊").button, 1, True, True)
+l2[0].pack_start(key(Key.media_volume_down, "V-").button, 1, True, True)
+l2[0].pack_start(key(Key.media_volume_mute, "V0").button, 1, True, True)
+l2[0].pack_start(key(Key.media_volume_up, "V+").button, 1, True, True)
 
 l2[1].pack_start(key(Key.page_up, "pgup").button, 1, True, True)
 l2[1].pack_start(key(Key.up, "↑").button, 1, True, True)
