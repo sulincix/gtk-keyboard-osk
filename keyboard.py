@@ -22,20 +22,21 @@ run_once()
 # If set True log all events (Too dangerous for privacy)
 debug=False
 theming=True
+scale=1
 
 
 # define css
 screen = Gdk.Screen.get_default()
 css = """
 button, label, entry {
-    font-size: """+str(screen.get_height()/62)+"""px;
+    font-size: """+str(screen.get_height()*scale/62)+"""px;
     font-family: monospace;
 }
 button {
-    padding: """+str(screen.get_height()/300)+"""px;
-    margin: """+str(screen.get_height()/355)+"""px;
-    min-height: """+str(screen.get_height()/40)+"""px;
-    min-width: """+str(screen.get_height()/40)+"""px;
+    padding: """+str(screen.get_height()*scale/300)+"""px;
+    margin: """+str(screen.get_height()*scale/355)+"""px;
+    min-height: """+str(screen.get_height()*scale/40)+"""px;
+    min-width: """+str(screen.get_height()*scale/40)+"""px;
 }
 
 button:hover {
