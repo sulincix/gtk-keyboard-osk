@@ -25,13 +25,16 @@ def get_output(cmd):
     return out.decode("utf-8")
 
 # If set True log all events (Too dangerous for privacy)
-debug=False
-theming=True
+debug=("--debug" in sys.argv)
+theming=("--no-theme" not in sys.argv)
 scale=1
 
 
 # define css
 screen = Gdk.Screen.get_default()
+# Window create
+w = Gtk.Window(Gtk.WindowPosition.CENTER_ALWAYS)
+
 css = """
 button, label, entry {
     font-size: """+str(screen.get_height()*scale/62)+"""px;
@@ -61,6 +64,7 @@ button:hover {
 if theming:
     # Remove user theme
     os.environ["GTK_THEME"] = "Adwaita-dark"
+    w.set_opacity(0.9)
     css+="""
     * {
         color: #fff;
@@ -89,8 +93,7 @@ wlayout = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 wlayout.pack_start(layout, 1, True, True)
 wlayout.pack_end(layout2, 0, True, False)
 
-# Window create
-w = Gtk.Window(Gtk.WindowPosition.CENTER_ALWAYS)
+w.set_opacity(0.9)
 if "--no-move" not in sys.argv:
     hb = Gtk.HeaderBar()
     w.set_titlebar(hb)
@@ -98,12 +101,20 @@ if "--no-move" not in sys.argv:
     w.set_resizable(False)
 else:
     wl = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    w.add(wl)
+    wl2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+    w.add(wl2)
     hb = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
     w.set_decorated(False)
     w.move(0,screen.get_height()*0.70)
     wl.pack_start(hb,0,True,False)
     wl.pack_start(wlayout,1,True,False)
+    wl2.pack_start(Gtk.Label(),1,True,False)
+    wl2.pack_start(Gtk.Label(),1,True,False)
+    wl2.pack_start(Gtk.Label(),1,True,False)
+    wl2.pack_start(wl,1,True,False)
+    wl2.pack_end(Gtk.Label(),1,True,False)
+    wl2.pack_end(Gtk.Label(),1,True,False)
+    wl2.pack_end(Gtk.Label(),1,True,False)
     w.resize(screen.get_width(),screen.get_height()*0.30)
 w.set_accept_focus(False)
 w.set_keep_above(True)
