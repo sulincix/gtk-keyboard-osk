@@ -6,6 +6,7 @@ from pynput.keyboard import Key, Controller
 import os
 import sys
 import fcntl
+import subprocess
 fh=0
 #https://stackoverflow.com/questions/380870/make-sure-only-a-single-instance-of-a-program-is-running
 def run_once():
@@ -18,6 +19,10 @@ def run_once():
         os._exit(0)
 
 run_once()
+def get_output(cmd):
+    p = subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    return out.decode("utf-8")
 
 # If set True log all events (Too dangerous for privacy)
 debug=False
@@ -102,8 +107,6 @@ l = []  # row array
 l2 = []  # row array (left)
 trf = ["+1234567890/-", "fgğıodrnhpqw", "uieaütkmlyşx", "<jövcçzsb.,", ""]
 trq = ["\"1234567890*-", "qwertyuıopğü", "asdfghjklşi,", "<zxcvbnmöç.", ""]
-trm = ["\"1234567890*-", "qwertyuiop", "asdfghjkl,", "<zxcvbnm.", ""]
-trfm = ["+1234567890/-", "fgodrnhpqw", "uieatkmlyx", "<jvczsb.,", ""]
 aqvoid = ["+1234567890/-", "aqvoidfınlmk", "ğcsergpyjhşx", "<tbuzçwöü.,", ""]
 
 ru=["ё1234567890-=","йцукенгшщзхъ","фывапролджэ\\","~ячсмитьбю.",""]
@@ -111,24 +114,18 @@ us= ["`1234567890-=","qwertyuiop[]","asdfghjkl;'\\","~zxcvbnm,./",""]
 single_keys = [] 
 big = False
 
-if  "trq" in sys.argv:
-    kbd = trq
-    os.system("setxkbmap tr")
-elif  "trm" in sys.argv:
-    kbd = trm
-    os.system("setxkbmap tr")
-elif  "trfm" in sys.argv:
-    kbd = trfm
-    os.system("setxkbmap tr f")
-elif  "aqvoid" in sys.argv:
+lang=get_output("setxkbmap -query | grep layout").split(":")[-1].strip().split(",")[0]
+variant=get_output("setxkbmap -query | grep variant").split(":")[-1].strip().split(",")[0]
+kb=lang+variant
+
+if "aqvoid" in sys.argv:
     kbd = aqvoid
-    os.system("setxkbmap tr f")
-elif "us" in sys.argv:
-    kbd=us
-    os.system("setxkbmap us")
-elif "ru" in sys.argv:
-    kbd=ru
-    os.system("setxkbmap ru")
+elif  kb == "trf":
+    kbd = trf
+elif kb == "us":
+    kbd = us
+elif kb == "ru":
+    kbd = ru
 else:
     kbd = trq
 
