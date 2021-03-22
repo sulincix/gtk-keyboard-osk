@@ -90,7 +90,7 @@ wlayout.pack_start(layout, 1, True, True)
 wlayout.pack_end(layout2, 0, True, False)
 
 # Window create
-w = Gtk.Window()
+w = Gtk.Window(Gtk.WindowPosition.CENTER_ALWAYS)
 if "--no-move" not in sys.argv:
     hb = Gtk.HeaderBar()
     w.set_titlebar(hb)
